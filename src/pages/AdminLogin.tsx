@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import '../assets/styles/login.css'
+import axios from "axios";
 
 function AdminLogin() {
     const [email, setEmail] = useState('');
@@ -13,27 +14,26 @@ function AdminLogin() {
         e.preventDefault();
         try {
             const apiUrl = import.meta.env.VITE_BACKEND_API_URL;
-            const response = await fetch(`${apiUrl}/admin/login`, {
-                method: 'POST',
+            const response = await axios.post(`${apiUrl}/admin/login`, {
+                email: email,
+                password: password
+            }, {
                 headers: {
                     'content-type': 'application/json',
                 },
-                body: JSON.stringify({
-                    email: email,
-                    password: password
-                }),
-            });
-            const data = await response.json();
-            if (!response.ok) {
-                setError(data.error);
-                return;
             }
+            );
+            const data = await response.data;
             localStorage.setItem('authToken', data.token);
-
             navigator('/admin/dashboard');
         }
         catch (error) {
-            setError('Network Error ! Please try again')
+            if (axios.isAxiosError(error) && error.response) {
+                setError(error.response.data?.error || 'Login failed. Please try again.');
+            }
+            else {
+                setError('Network Error ! Please try again')
+            }
 
         }
 

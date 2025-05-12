@@ -6,4 +6,5 @@ body {
   background-attachment: fixed;
   overflow: hidden;
   font-family: sans-serif, Arial;
+  height: 100vh;
 }

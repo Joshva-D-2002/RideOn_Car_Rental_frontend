@@ -2,6 +2,7 @@ import '../assets/styles/login.css'
 import carImage from '../assets/images/car-image.png'
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 function Login() {
     const [email, setEmail] = useState('');
@@ -13,26 +14,31 @@ function Login() {
         e.preventDefault();
         try {
             const apiUrl = import.meta.env.VITE_BACKEND_API_URL;
-            const response = await fetch(`${apiUrl}/login`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
+            const response = await axios.post(
+                `${apiUrl}/login`,
+                {
                     email: email,
                     password: password,
-                }),
-            });
-            const data = await response.json();
-
-            if (!response.ok) {
-                setError(data.error);
-                return;
-            }
+                },
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                }
+            );
+            console.log(response);
+            const data = response.data;
+            console.log(data)
             localStorage.setItem('authToken', data.token);
+            localStorage.setItem('userId', data.userId)
             navigate('/dashboard')
         } catch (error) {
-            setError('Network Error ! Please try again');
+            if (axios.isAxiosError(error) && error.response) {
+                setError(error.response.data?.error || 'Login failed. Please try again.');
+            } else {
+                setError('Network Error ! Please try again');
+
+            }
         }
 
     }
