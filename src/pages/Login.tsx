@@ -3,12 +3,15 @@ import carImage from '../assets/images/car-image.png'
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { useDispatch } from 'react-redux';
+import { loginSuccess } from '../redux/userSlice';
 
 function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     async function handleLogin(e: React.FormEvent) {
         e.preventDefault();
@@ -26,11 +29,21 @@ function Login() {
                     },
                 }
             );
-            console.log(response);
             const data = response.data;
-            console.log(data)
-            localStorage.setItem('authToken', data.token);
-            localStorage.setItem('userId', data.userId)
+            const userId = data.userId;
+            const token = data.token
+            localStorage.setItem('authToken', token);
+            const userResponse = await axios.get(
+                `${apiUrl}/user/list/${userId}`,
+                {
+                    headers: {
+                        Authorization: `${token}`,
+                    },
+                }
+            );
+            const [user] = userResponse.data;
+
+            dispatch(loginSuccess({ user, token, isAuthenticated: true }));
             navigate('/dashboard')
         } catch (error) {
             if (axios.isAxiosError(error) && error.response) {

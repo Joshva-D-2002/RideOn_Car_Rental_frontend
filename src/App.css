@@ -1,14 +1,6 @@
 #root {
-  max-width: 1500px;
+  max-width: 2000px;
+  margin: 0% auto;
   height: 100vh;
-  margin: 0 auto;
   box-sizing: border-box;
-}
-
-.main-container {
-  background-color: rgb(255, 224, 224);
-  overflow: auto;
-  height: 90vh;
-  overflow-y: auto;
-  overflow-x: hidden;
 }

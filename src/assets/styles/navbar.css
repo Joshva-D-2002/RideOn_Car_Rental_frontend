@@ -1,11 +1,10 @@
 .navbar {
     width: 100%;
     height: 10%;
-    margin: 0 auto;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: rgb(255, 224, 224);
+    background-color: rgb(44, 62, 80);
 }
 
 .navbar-left {
@@ -17,7 +16,7 @@
 }
 
 .navbar-left h1 {
-    color: rgb(52, 73, 94);
+    color: antiquewhite;
 }
 
 .navbar-left .logo {
@@ -26,13 +25,13 @@
 }
 
 .navbar-left .logo img {
-    width: 100%;
-    height: 100%;
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
 }
 
 .navbar-center {
-    width: 40%;
+    width: 35%;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -40,7 +39,7 @@
 
 .navbar-center .nav_link {
     text-decoration: none;
-    color: black;
+    color: white;
 }
 
 .navbar-center .nav_link:hover {
@@ -48,11 +47,45 @@
 }
 
 .navbar-right {
-    width: 10%;
+    width: 15%;
 }
 
-.navbar-right button {
-    width: 70%;
-    background-color: transparent;
+.profile-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-toggle {
     cursor: pointer;
+    padding: 10px;
+    background-color: transparent;
+    border: none;
+    font-size: 16px;
+    color: antiquewhite;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: #fff;
+    min-width: 80px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid #ddd;
+    z-index: 999;
+    padding: 5px 0;
+}
+
+.dropdown-menu button {
+    width: 100%;
+    background: none;
+    border: none;
+    padding: 8px 12px;
+    text-align: left;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.dropdown-menu button:hover {
+    color: rgb(44, 62, 80);
 }
