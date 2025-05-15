@@ -1,6 +1,6 @@
 import '../assets/styles/login.css'
 import carImage from '../assets/images/car-image.png'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
@@ -12,7 +12,13 @@ function Login() {
     const [error, setError] = useState('');
     const navigate = useNavigate();
     const dispatch = useDispatch();
-
+    useEffect(() => {
+        if (error) {
+            setTimeout(() => {
+                setError('');
+            }, 5000);
+        }
+    }, [error]);
     async function handleLogin(e: React.FormEvent) {
         e.preventDefault();
         try {
@@ -33,11 +39,13 @@ function Login() {
             const userId = data.userId;
             const token = data.token
             localStorage.setItem('authToken', token);
+            localStorage.setItem('userId', userId);
             const userResponse = await axios.get(
                 `${apiUrl}/user/list/${userId}`,
                 {
                     headers: {
-                        Authorization: `${token}`,
+                        'Content-Type': 'application/json',
+                        'Authorization': `${token}`,
                     },
                 }
             );
@@ -69,7 +77,7 @@ function Login() {
                     <a href="#">Forget Password ?</a>
                     <button className='login-button' type='submit'>Login</button>
                 </form>
-                <p className='error'>{error}</p>
+                {error && <p className='error'>{error}</p>}
                 <span>or</span>
                 <p>Dont't have a Account ? <a href='#'>Sign Up</a></p>
             </div>
@@ -77,7 +85,6 @@ function Login() {
                 <h3> RideOn! Car Rental</h3>
                 <img src={carImage} alt="car image" />
                 <button onClick={() => { navigate('/admin/login') }}>Login as an admin</button>
-
             </div>
         </div >
 

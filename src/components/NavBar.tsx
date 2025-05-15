@@ -13,7 +13,7 @@ function Navbar() {
     const [showDropdown, setShowDropdown] = useState(false);
     function handleLogout() {
         dispatch(logout())
-        localStorage.removeItem('authToken');
+        localStorage.clear();
         navigate('/', { replace: true })
     }
     const toggleDropdown = () => {
@@ -30,8 +30,8 @@ function Navbar() {
                 </div>
                 <div className="navbar-center">
                     <Link to={'/cars'} className="nav_link">View Available Cars</Link>
-                    <Link to={'/rented/history'} className="nav_link">Rented Cars</Link>
-                    <Link to={'/bookings'} className="nav_link">Your Bookings</Link>
+                    <Link to={'/rented'} className="nav_link">Rented Cars</Link>
+                    <Link to={'/booked'} className="nav_link">Your Bookings</Link>
                 </div>
                 <div className="navbar-right">
                     <div className="profile-dropdown">
