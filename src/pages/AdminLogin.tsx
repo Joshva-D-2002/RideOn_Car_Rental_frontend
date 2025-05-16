@@ -1,40 +1,39 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import '../assets/styles/login.css'
-import axios from "axios";
+import { AdmilLoginApi } from "../api/apiservice";
+import { Toaster, toast } from "react-hot-toast";
+
+type LoginData = {
+    email: string,
+    password: string,
+}
+
+const intitialLoginData: LoginData = {
+    email: '',
+    password: ''
+}
 
 function AdminLogin() {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [error, setError] = useState('');
+    const [loginData, setLoginData] = useState<LoginData>(intitialLoginData)
 
-    const navigator = useNavigate();
+    const navigate = useNavigate();
 
     async function handleAdminLogin(e: React.FormEvent) {
         e.preventDefault();
         try {
-            const apiUrl = import.meta.env.VITE_BACKEND_API_URL;
-            const response = await axios.post(`${apiUrl}/admin/login`, {
-                email: email,
-                password: password
-            }, {
-                headers: {
-                    'content-type': 'application/json',
-                },
-            }
-            );
-            const data = await response.data;
-            localStorage.setItem('authToken', data.token);
-            navigator('/admin/dashboard');
-        }
-        catch (error) {
-            if (axios.isAxiosError(error) && error.response) {
-                setError(error.response.data?.error || 'Login failed. Please try again.');
-            }
-            else {
-                setError('Network Error ! Please try again')
-            }
+            const data = await AdmilLoginApi(loginData);
+            const userId = data.userId;
+            const token = data.token
+            console.log(data);
+            localStorage.setItem('authToken', token);
+            localStorage.setItem('userId', userId);
+            navigate('/admin/dashboard');
 
+        } catch (error: any) {
+            console.error(error);
+            const apiMessage = error?.response?.data?.error || 'Something went wrong';
+            toast.error(apiMessage);
         }
 
     }
@@ -46,14 +45,14 @@ function AdminLogin() {
                 <p> Enter your credentials to access your Account</p>
                 <form onSubmit={handleAdminLogin}>
                     <label>Email</label>
-                    <input type='email' name='email' placeholder='Enter your email address' value={email} onChange={e => setEmail(e.target.value)} />
+                    <input type='email' name='email' placeholder='Enter your email address' value={loginData.email} onChange={e => setLoginData((prev) => ({ ...prev, email: e.target.value }))} />
                     <label>Password</label>
-                    <input type="password" name='password' placeholder='Enter your password' value={password} onChange={e => setPassword(e.target.value)} />
+                    <input type="password" name='password' placeholder='Enter your password' value={loginData.password} onChange={e => setLoginData((prev) => ({ ...prev, password: e.target.value }))} />
                     <button className="login-button" type='submit'>Login</button>
                 </form>
-                <p className='error'>{error}</p>
-                <button className="back-button" onClick={() => navigator('/')}>back</button>
+                <button className="back-button" onClick={() => navigate('/')}>back</button>
             </div>
+            <Toaster position="top-right" />
         </div>
     );
 }

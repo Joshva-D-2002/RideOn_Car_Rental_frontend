@@ -2,8 +2,9 @@ import Navbar from "../components/NavBar";
 import Footer from "../components/Footer";
 import { useState, useEffect } from "react";
 import '../assets/styles/availablecars.css'
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { getCarListApi } from "../api/apiservice";
+import { Toaster, toast } from "react-hot-toast";
 
 type Car = {
     id: number,
@@ -21,32 +22,33 @@ type Car = {
 function AvailableCars() {
     const [cars, setCars] = useState<Car[]>([]);
     const [Loading, setLoading] = useState(true);
-
     const navigate = useNavigate();
 
-    function handleBooking(car: Object) {
-        navigate('/booking', { state: { car } });
+    function handleBooking(carId: number) {
+        navigate(`/booking/${carId}`,);
     }
 
-    useEffect(() => {
-        const apiUrl = import.meta.env.VITE_BACKEND_API_URL;
-        const token = localStorage.getItem('authToken');
-        axios.get(`${apiUrl}/car/list`, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `${token}`
-            }
-        }).then(response => {
-            setCars(response.data);
+    const fetchCarList = async () => {
+        try {
+            const data = await getCarListApi();
+            setCars(data);
             setLoading(false);
-        }).catch(error => {
-            console.log(error.message);
-        });
+
+        } catch (error: any) {
+            console.error(error);
+            const apiMessage = error?.response?.data?.error || 'Something went wrong';
+            toast.error(apiMessage);
+        }
+    };
+
+    useEffect(() => {
+        fetchCarList();
+
     }, []);
     return (
         <>
             <Navbar />
-            <div className="content-container">
+            <div className="available-container">
                 <ul className="list">
                     {Loading ? <h2 className="Loading">
                         Loading ...................
@@ -63,13 +65,14 @@ function AvailableCars() {
                                     <div>Color : {car.color}</div>
                                     <div>Type : {car.type}</div>
                                     <div>Registeration Number : {car.registration_number}</div>
-                                    <button onClick={() => handleBooking(car)}>
+                                    <button onClick={() => handleBooking(car.id)}>
                                         Book
                                     </button>
                                 </li>
                             ))
                     }
                 </ul>
+                <Toaster position="top-right" />
             </div>
             <Footer />
         </>

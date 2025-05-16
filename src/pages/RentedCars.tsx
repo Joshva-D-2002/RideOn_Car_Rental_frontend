@@ -1,8 +1,9 @@
 import Navbar from "../components/NavBar";
 import Footer from "../components/Footer";
 import { useState, useEffect } from "react";
-import axios from "axios";
 import '../assets/styles/rentedcars.css'
+import { getCarListApi } from "../api/apiservice";
+import { toast, Toaster } from "react-hot-toast";
 
 type Car = {
     id: number,
@@ -15,28 +16,25 @@ type Car = {
     status: string,
     type: string,
     registration_number: string,
-    start_date: string,
-    end_date: string
 }
 
 function RentedCars() {
     const [cars, setCars] = useState<Car[]>([]);
     const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        const apiUrl = import.meta.env.VITE_BACKEND_API_URL;
-        const token = localStorage.getItem('authToken');
-        axios.get(`${apiUrl}/car/rented`, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `${token}`
-            }
-        }).then(response => {
-            setCars(response.data);
+    const fetchCarList = async () => {
+        try {
+            const data = await getCarListApi();
+            setCars(data);
             setLoading(false);
-        }).catch(error => {
-            console.log(error.message);
-        });
+
+        } catch (error: any) {
+            console.error(error);
+            const apiMessage = error?.response?.data?.error || 'Something went wrong';
+            toast.error(apiMessage);
+        }
+    };
+    useEffect(() => {
+        fetchCarList();
     }, []);
     return (
         <>
@@ -46,7 +44,7 @@ function RentedCars() {
                     {loading ? <h2 className="Loading">Loading ...................</h2> : cars.length === 0 ?
                         <h2 className="NotFound">No rented cars found</h2> :
                         cars
-                            .filter(car => new Date(car.end_date) > new Date())
+                            .filter(car => car.status === "rented")
                             .map(car => (
                                 <li className="cards" key={car.id}>
                                     <h3>{car.brand} {car.model} {car.year}</h3>
@@ -57,16 +55,11 @@ function RentedCars() {
                                     <div>Color : {car.color}</div>
                                     <div>Type : {car.type}</div>
                                     <div>Registeration Number : {car.registration_number}</div>
-                                    <div>
-                                        Booked From : {new Date(car.start_date).toLocaleDateString()}
-                                    </div>
-                                    <div>
-                                        Available From: {new Date(car.end_date).toLocaleDateString()}
-                                    </div>
                                 </li>
                             ))
                     }
                 </ul>
+                <Toaster position="top-right" />
             </div>
             <Footer />
         </>

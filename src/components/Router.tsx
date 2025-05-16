@@ -25,7 +25,7 @@ function Router() {
                 <Route path='/cars' element={<ProtectedCars />} />
                 <Route path='/booked' element={<ProtectedBooked />} />
                 <Route path='/rented' element={<ProtectedRented />} />
-                <Route path='/booking' element={<ProtectedBooking />} />
+                <Route path='/booking/:carId' element={<ProtectedBooking />} />
                 <Route path='/admin/dashboard' element={<ProtectedAdminDashboard />} />
 
             </Routes>
