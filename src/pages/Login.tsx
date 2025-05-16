@@ -1,3 +1,4 @@
+import React from 'react';
 import '../assets/styles/login.css'
 import carImage from '../assets/images/car-image.png'
 import { useState } from 'react';
@@ -49,10 +50,10 @@ function Login() {
                 <h2>Welcome back</h2>
                 <p> Enter your credentials to access your Account</p>
                 <form onSubmit={handleLogin}>
-                    <label>Email</label>
-                    <input type='email' name='email' placeholder='Enter your email address' value={loginData.email} onChange={e => setLoginData((prev) => ({ ...prev, email: e.target.value }))} />
-                    <label>Password</label>
-                    <input type="password" name='password' placeholder='Enter your password' value={loginData.password} onChange={e => setLoginData((prev) => ({ ...prev, password: e.target.value }))} />
+                    <label htmlFor='email'>Email</label>
+                    <input type='email' id='email' name='email' placeholder='Enter your email address' value={loginData.email} onChange={e => setLoginData((prev) => ({ ...prev, email: e.target.value }))} />
+                    <label htmlFor='password'>Password</label>
+                    <input type="password" id='password' name='password' placeholder='Enter your password' value={loginData.password} onChange={e => setLoginData((prev) => ({ ...prev, password: e.target.value }))} />
                     <a href="#">Forget Password ?</a>
                     <button className='login-button' type='submit'>Login</button>
                 </form>
