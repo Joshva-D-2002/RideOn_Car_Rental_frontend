@@ -1,3 +1,4 @@
+import React from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Login from '../pages/Login';
 import AdminLogin from '../pages/AdminLogin';
@@ -25,7 +26,7 @@ function Router() {
                 <Route path='/cars' element={<ProtectedCars />} />
                 <Route path='/booked' element={<ProtectedBooked />} />
                 <Route path='/rented' element={<ProtectedRented />} />
-                <Route path='/booking' element={<ProtectedBooking />} />
+                <Route path='/booking/:carId' element={<ProtectedBooking />} />
                 <Route path='/admin/dashboard' element={<ProtectedAdminDashboard />} />
 
             </Routes>
