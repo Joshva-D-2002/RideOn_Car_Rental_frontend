@@ -9,7 +9,7 @@ export const apicall = async (url: string, method = 'GET', data: any = null) => 
             data,
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': localStorage.getItem('authToken') || ''
+                'Authorization': localStorage.getItem('authToken') ?? ''
             }
         });
 

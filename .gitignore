@@ -8,11 +8,14 @@ pnpm-debug.log*
 lerna-debug.log*
 
 __mocks__
+sonar-project.properties
 node_modules
 .env
 dist
 dist-ssr
 *.local
+.scannerwork/
+coverage
 
 # Editor directories and files
 .vscode/*

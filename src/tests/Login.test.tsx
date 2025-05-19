@@ -3,7 +3,7 @@ import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import '@testing-library/jest-dom';
 import Login from "../pages/Login";
 import { BrowserRouter } from "react-router-dom";
-import { loginApi, getuserApi } from "../api/apiservice";
+import { loginApi, getuserApi } from "../api/apiService";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { loginSuccess } from "../redux/userSlice";
@@ -116,6 +116,24 @@ describe("Login Component", () => {
                 isAuthenticated: true
             }));
             expect(navigateMock).toHaveBeenCalledWith("/dashboard");
+        });
+    });
+
+    test("shows fallback error message when error response is missing", async () => {
+        (loginApi as jest.Mock).mockRejectedValueOnce({});
+
+        render(
+            <BrowserRouter>
+                <Login />
+            </BrowserRouter>
+        );
+
+        fireEvent.change(screen.getByLabelText("Email"), { target: { value: "test@example.com" } });
+        fireEvent.change(screen.getByLabelText("Password"), { target: { value: "wrongpassword" } });
+        fireEvent.click(screen.getByText("Login"));
+
+        await waitFor(() => {
+            expect(toast.error).toHaveBeenCalledWith("Something went wrong");
         });
     });
 

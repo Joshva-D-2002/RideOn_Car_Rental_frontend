@@ -1,9 +1,9 @@
 import Navbar from "../components/NavBar";
 import Footer from "../components/Footer";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import '../assets/styles/availablecars.css'
 import { useNavigate } from "react-router-dom";
-import { getCarListApi } from "../api/apiservice";
+import { getCarListApi } from "../api/apiService";
 import { Toaster, toast } from "react-hot-toast";
 
 type Car = {
@@ -36,7 +36,7 @@ function AvailableCars() {
 
         } catch (error: any) {
             console.error(error);
-            const apiMessage = error?.response?.data?.error || 'Something went wrong';
+            const apiMessage = error?.response?.data?.error ?? 'Something went wrong';
             toast.error(apiMessage);
         }
     };
@@ -58,7 +58,7 @@ function AvailableCars() {
                             .map(car => (
                                 <li className="card" key={car.id}>
                                     <h3>{car.brand} {car.model} {car.year}</h3>
-                                    <img src={car.image} alt="Car Image" />
+                                    <img src={car.image} alt={`${car.brand} ${car.model} Car`} />
                                     <div className="status">{car.status}</div>
                                     <div>Color : {car.color}</div>
                                     <div>Price Per Day : {car.price_per_day}</div>

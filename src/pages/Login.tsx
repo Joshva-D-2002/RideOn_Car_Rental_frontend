@@ -1,11 +1,10 @@
-import React from 'react';
 import '../assets/styles/login.css'
 import carImage from '../assets/images/car-image.png'
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { loginSuccess } from '../redux/userSlice';
-import { getuserApi, loginApi } from '../api/apiservice';
+import { getuserApi, loginApi } from '../api/apiService';
 import { Toaster, toast } from 'react-hot-toast';
 
 type LoginData = {
@@ -37,7 +36,7 @@ function Login() {
 
         } catch (error: any) {
             console.error(error);
-            const apiMessage = error?.response?.data?.error || 'Something went wrong';
+            const apiMessage = error?.response?.data?.error ?? 'Something went wrong';
             toast.error(apiMessage);
 
         }
@@ -54,15 +53,15 @@ function Login() {
                     <input type='email' id='email' name='email' placeholder='Enter your email address' value={loginData.email} onChange={e => setLoginData((prev) => ({ ...prev, email: e.target.value }))} />
                     <label htmlFor='password'>Password</label>
                     <input type="password" id='password' name='password' placeholder='Enter your password' value={loginData.password} onChange={e => setLoginData((prev) => ({ ...prev, password: e.target.value }))} />
-                    <a href="#">Forget Password ?</a>
+                    <a href="/reset-password">Forget Password ?</a>
                     <button className='login-button' type='submit'>Login</button>
                 </form>
                 <span>or</span>
-                <p>Dont't have a Account ? <a href='#'>Sign Up</a></p>
+                <p>Dont't have a Account ? <a href='/signup'>Sign Up</a></p>
             </div>
             <div className='car-picture-container'>
                 <h3> RideOn! Car Rental</h3>
-                <img src={carImage} alt="car image" />
+                <img src={carImage} alt="Car" />
                 <button onClick={() => { navigate('/admin/login') }}>Login as an admin</button>
             </div>
             <Toaster position="top-right" />

@@ -2,8 +2,8 @@ import Navbar from "../components/NavBar"
 import Footer from "../components/Footer"
 import { useNavigate, useParams } from "react-router-dom"
 import '../assets/styles/booking.css'
-import { useEffect, useState } from "react"
-import { getCarApi, getuserApi, addBookingApi, carStatusUpdateApi } from "../api/apiservice"
+import React, { useEffect, useState } from "react"
+import { getCarApi, getuserApi, addBookingApi, carStatusUpdateApi } from "../api/apiService"
 import toast from "react-hot-toast"
 
 type User = {
@@ -90,7 +90,7 @@ function Booking() {
         }
         catch (error: any) {
             console.error(error);
-            const apiMessage = error?.response?.data?.error || 'Something went wrong';
+            const apiMessage = error?.response?.data?.error ?? 'Something went wrong';
             toast.error(apiMessage);
         }
     }
@@ -103,9 +103,7 @@ function Booking() {
         setBookingState(prev => {
             const start = new Date(prev.start_date);
             const end = new Date(prev.end_date);
-
             const dayDiff = end.getDate() - start.getDate();
-
             const totalPrice = dayDiff * car.price_per_day;
             return {
                 ...prev,
@@ -120,7 +118,7 @@ function Booking() {
         }
         catch (error: any) {
             console.error(error);
-            const apiMessage = error?.response?.data?.error || 'Something went wrong';
+            const apiMessage = error?.response?.data?.error ?? 'Something went wrong';
             toast.error(apiMessage);
         }
 
@@ -133,7 +131,7 @@ function Booking() {
                 <div className="left-container">
                     <div className="car-details" key={car.id}>
                         <h3>{car.brand} {car.model} {car.year}</h3>
-                        <img src={car.image} alt="Car Image" />
+                        <img src={car.image} alt={`${car.brand} ${car.model} Car`} />
                         <div>Color : {car.color}</div>
                         <div>Price Per Day : {car.price_per_day}</div>
                         <div>Color : {car.color}</div>
@@ -144,16 +142,16 @@ function Booking() {
                 <div className="right-container">
                     <form className="booking-details" onSubmit={handleBooking}>
                         <h4>Enter your Details for Booking</h4>
-                        <label>Name :</label>
-                        <input type="text" name="name" placeholder="Enter your name" defaultValue={user.first_name} disabled />
-                        <label>Email :</label>
-                        <input type="email" name="email" placeholder="Enter your email address" defaultValue={user.email} disabled />
-                        <label>Phone Number :</label>
-                        <input type="text" name="phone_number" placeholder="Enter your phone number" defaultValue={user.phone_number} disabled />
-                        <label>Start date :</label>
-                        <input type="date" name="start_date" value={bookingState.start_date} onChange={(e) => setBookingState((prev) => ({ ...prev, start_date: e.target.value }))} />
-                        <label>End Date :</label>
-                        <input type="date" name="end_date" value={bookingState.end_date} onChange={(e) => setBookingState((prev) => ({ ...prev, end_date: e.target.value }))} />
+                        <label htmlFor="name">Name :</label>
+                        <input type="text" id="name" name="name" placeholder="Enter your name" defaultValue={user.first_name} disabled />
+                        <label htmlFor="email">Email :</label>
+                        <input type="email" id="email" name="email" placeholder="Enter your email address" defaultValue={user.email} disabled />
+                        <label htmlFor="phone_number">Phone Number :</label>
+                        <input type="text" id="phone_number" name="phone_number" placeholder="Enter your phone number" defaultValue={user.phone_number} disabled />
+                        <label htmlFor="start_date">Start date :</label>
+                        <input type="date" id="start_date" name="start_date" value={bookingState.start_date} onChange={(e) => setBookingState((prev) => ({ ...prev, start_date: e.target.value }))} />
+                        <label htmlFor="end_date">End Date :</label>
+                        <input type="date" id="end_date" name="end_date" value={bookingState.end_date} onChange={(e) => setBookingState((prev) => ({ ...prev, end_date: e.target.value }))} />
                         <button type="submit">Book</button>
                     </form>
                 </div>
